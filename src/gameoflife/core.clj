@@ -18,6 +18,14 @@
   (or (== lively-neighbours 3)
       (and (== lively-neighbours 2)
            alive-now)))
+
+(defrecord Cell [alive-now alive-next])
+
+(defn count-alive [neighbours]
+  (count
+   (filter (fn [cell]
+             (true? (:alive-now cell)))
+           neighbours)))
 (comment
 
 (alive-next 0 true)
@@ -39,5 +47,11 @@
 (alive-next 7 false)
 (alive-next 8 false)
 
+(def cell-a (Cell. false true))
+(def cell-b (Cell. true true))
+(def cell-c (Cell. true false))
+(def cell-d (Cell. true false))
+
+(count-alive [cell-a cell-b cell-c cell-d])
 )
 
