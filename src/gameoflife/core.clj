@@ -14,10 +14,14 @@
 ; decide if cell is alive on next generation
 ; draw world and update status of each cell (alive or not)
 
-(defn alive-next [lively-neighbours alive-now]
-  (or (== lively-neighbours 3)
-      (and (== lively-neighbours 2)
-           alive-now)))
+(defn neighbours [world x y]
+  (let [dxdy [[-1 -1] [0 -1] [1 -1]
+              [-1 0]         [1 0]
+              [-1 1]  [0 1]  [1 1]]]
+    (map (fn [[dx dy]]
+           (nth (nth world (+ y dy)) (+ x dx)))
+         dxdy)))
+
 
 (defrecord Cell [alive-now alive-next])
 
@@ -26,6 +30,12 @@
    (filter (fn [cell]
              (true? (:alive-now cell)))
            neighbours)))
+
+(defn alive-next [lively-neighbours alive-now]
+  (or (== lively-neighbours 3)
+      (and (== lively-neighbours 2)
+           alive-now)))
+
 (comment
 
 (alive-next 0 true)
@@ -53,5 +63,11 @@
 (def cell-d (Cell. true false))
 
 (count-alive [cell-a cell-b cell-c cell-d])
+
+(def world [[1 2 3 4]
+            [5 6 7 8]
+            [9 10 11 12]])
+
+(neighbours world 1 1)
 )
 
