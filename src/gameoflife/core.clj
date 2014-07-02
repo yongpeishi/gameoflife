@@ -14,7 +14,7 @@
 ; decide if cell is alive on next generation
 ; draw world and update status of each cell (alive or not)
 
-(defn neighbours [world size x y]
+(defn get-neighbours [world size x y]
   (let [dxdy [[-1 -1] [0 -1] [1 -1]
               [-1 0]         [1 0]
               [-1 1]  [0 1]  [1 1]]]
@@ -22,11 +22,14 @@
            (let [nx (+ x dx)
                  ny (+ y dy)]
              (if-not (or (neg? nx) (>= nx size) (neg? ny) (>= ny size))
-               (nth (nth world ny) nx))))
+               (get-cell world nx ny))))
          dxdy)))
 
 
 (defrecord Cell [alive-now alive-next])
+
+(defn get-cell [world x y]
+  (nth (nth world y) x))
 
 (defn count-alive [neighbours]
   (count
@@ -34,31 +37,31 @@
              (true? (:alive-now cell)))
            neighbours)))
 
-(defn alive-next [lively-neighbours alive-now]
+(defn alive-next? [lively-neighbours alive-now]
   (or (== lively-neighbours 3)
       (and (== lively-neighbours 2)
            alive-now)))
 
 (comment
 
-(alive-next 0 true)
-(alive-next 1 true)
-(alive-next 2 true)
-(alive-next 3 true)
-(alive-next 4 true)
-(alive-next 5 true)
-(alive-next 6 true)
-(alive-next 7 true)
-(alive-next 8 true)
-(alive-next 0 false)
-(alive-next 1 false)
-(alive-next 2 false)
-(alive-next 3 false)
-(alive-next 4 false)
-(alive-next 5 false)
-(alive-next 6 false)
-(alive-next 7 false)
-(alive-next 8 false)
+(alive-next? 0 true)
+(alive-next? 1 true)
+(alive-next? 2 true)
+(alive-next? 3 true)
+(alive-next? 4 true)
+(alive-next? 5 true)
+(alive-next? 6 true)
+(alive-next? 7 true)
+(alive-next? 8 true)
+(alive-next? 0 false)
+(alive-next? 1 false)
+(alive-next? 2 false)
+(alive-next? 3 false)
+(alive-next? 4 false)
+(alive-next? 5 false)
+(alive-next? 6 false)
+(alive-next? 7 false)
+(alive-next? 8 false)
 
 (def cell-a (Cell. false true))
 (def cell-b (Cell. true true))
@@ -73,8 +76,8 @@
             [9 10 11 12]
             [13 14 15 16]])
 
-(neighbours world 4 1 1)
-(neighbours world 4 0 0)
-(neighbours world 4 3 3)
+(get-neighbours world 4 1 1)
+(get-neighbours world 4 0 0)
+(get-neighbours world 4 3 3)
 )
 
