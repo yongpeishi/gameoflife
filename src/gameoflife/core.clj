@@ -42,6 +42,21 @@
       (and (== lively-neighbours 2)
            alive-now)))
 
+(defn cal-next-gen [world size]
+  (loop [row-num 0]
+    (when (< row-num size)
+
+      (loop [col-num 0]
+        (when (< col-num size)
+          (let [cell (get-cell world col-num row-num)
+                neighbours (get-neighbours world size col-num row-num)]
+            (assoc cell :alive-next (alive-next (count-alive neighbours) (:alive-now cell))))
+          (recur (inc col-num))
+      ))
+
+      (recur (inc row-num))
+   )))
+
 (comment
 
 (alive-next? 0 true)
@@ -71,13 +86,35 @@
 (count-alive [cell-a cell-b cell-c cell-d])
 (count-alive [cell-a cell-b nil cell-c cell-d nil])
 
-(def world [[1 2 3 4]
+(def world-a [[1 2 3 4]
             [5 6 7 8]
             [9 10 11 12]
             [13 14 15 16]])
 
-(get-neighbours world 4 1 1)
-(get-neighbours world 4 0 0)
-(get-neighbours world 4 3 3)
+(get-neighbours world-a 4 1 1)
+(get-neighbours world-a 4 0 0)
+(get-neighbours world-a 4 3 3)
+
+(def a (Cell. false nil))
+(def b (Cell. false nil))
+(def c (Cell. false nil))
+
+(def d (Cell. false nil))
+(def e (Cell. true nil))
+(def f (Cell. true nil))
+
+(def g (Cell. false nil))
+(def h (Cell. true nil))
+(def i (Cell. false nil))
+
+
+(def world-b [[a b c]
+              [d e f]
+              [g h i]])
+
+(def new-world (cal-next-gen world-b 3))
+new-world
+world-b
+
 )
 
