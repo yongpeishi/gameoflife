@@ -26,7 +26,7 @@
          dxdy)))
 
 
-(defrecord Cell [alive-now alive-next])
+(defrecord Cell [x y alive-now alive-next])
 
 (defn get-cell [world x y]
   (nth (nth world y) x))
@@ -43,19 +43,13 @@
            alive-now)))
 
 (defn cal-next-gen [world size]
-  (loop [row-num 0]
-    (when (< row-num size)
-
-      (loop [col-num 0]
-        (when (< col-num size)
-          (let [cell (get-cell world col-num row-num)
-                neighbours (get-neighbours world size col-num row-num)]
-            (assoc cell :alive-next (alive-next (count-alive neighbours) (:alive-now cell))))
-          (recur (inc col-num))
-      ))
-
-      (recur (inc row-num))
-   )))
+  (map (fn [row]
+         (map (fn [cell]
+             (let [neighbours (get-neighbours world size (:x cell) (:y cell))]
+               (assoc cell :alive-next (alive-next? (count-alive neighbours) (:alive-now cell)))
+               ))
+           row))
+       world))
 
 (comment
 
@@ -78,10 +72,10 @@
 (alive-next? 7 false)
 (alive-next? 8 false)
 
-(def cell-a (Cell. false true))
-(def cell-b (Cell. true true))
-(def cell-c (Cell. true false))
-(def cell-d (Cell. true false))
+(def cell-a (Cell. nil nil false true))
+(def cell-b (Cell. nil nil true true))
+(def cell-c (Cell. nil nil true false))
+(def cell-d (Cell. nil nil true false))
 
 (count-alive [cell-a cell-b cell-c cell-d])
 (count-alive [cell-a cell-b nil cell-c cell-d nil])
@@ -95,17 +89,17 @@
 (get-neighbours world-a 4 0 0)
 (get-neighbours world-a 4 3 3)
 
-(def a (Cell. false nil))
-(def b (Cell. false nil))
-(def c (Cell. false nil))
+(def a (Cell. 0 0 false nil))
+(def b (Cell. 1 0 false nil))
+(def c (Cell. 2 0 false nil))
 
-(def d (Cell. false nil))
-(def e (Cell. true nil))
-(def f (Cell. true nil))
+(def d (Cell. 0 1 false nil))
+(def e (Cell. 1 1 true nil))
+(def f (Cell. 2 1 true nil))
 
-(def g (Cell. false nil))
-(def h (Cell. true nil))
-(def i (Cell. false nil))
+(def g (Cell. 0 2 false nil))
+(def h (Cell. 1 2 true nil))
+(def i (Cell. 2 2 false nil))
 
 
 (def world-b [[a b c]
@@ -113,7 +107,9 @@
               [g h i]])
 
 (def new-world (cal-next-gen world-b 3))
+
 new-world
+
 world-b
 
 )
