@@ -51,6 +51,17 @@
            row))
        world))
 
+(defn draw [world]
+  (map (fn [row]
+         (map (fn [cell]
+                (let [alive (:alive-next cell)]
+                  (if alive
+                    (print "#")
+                    (print " ")))
+                (assoc cell :alive-now (:alive-next cell) :alive-next nil))
+               row))
+       world))
+
 (comment
 
 (alive-next? 0 true)
@@ -111,6 +122,12 @@
 new-world
 
 world-b
+
+
+(def world-drawn (draw new-world))
+
+world-drawn
+
 
 )
 
