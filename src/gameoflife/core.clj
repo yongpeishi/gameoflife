@@ -1,4 +1,6 @@
-(ns gameoflife.core)
+(ns gameoflife.core
+  (:require [alex-and-georges.debug-repl :refer [debug-repl]]))
+
 
 ; RULES
 ; Any live cell with fewer than two live neighbours dies, as if caused by under-population.
