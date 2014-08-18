@@ -1,10 +1,10 @@
 # gameoflife
 
-A Clojure library designed to ... well, that part is up to you.
+First attempt to write Clojure program.
 
-## Usage
+## Description
 
-FIXME
+The calcultation for next generation works, but no interface.
 
 ## License
 
